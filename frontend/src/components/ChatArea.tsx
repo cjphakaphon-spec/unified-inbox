@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import type { Conversation, Message } from '../types';
 import { sendMessage, uploadMedia, markAsRead } from '../services/api';
 import { Send, AlertTriangle, AlertCircle, RotateCcw, CheckCheck, Clock, Paperclip, Image as ImageIcon, X } from 'lucide-react';
+import { getFullMediaUrl } from '../config';
 
 interface ChatAreaProps {
   token: string;
@@ -248,9 +249,9 @@ export const ChatArea: React.FC<ChatAreaProps> = ({
                   {/* Media / Image if exists */}
                   {msg.media_url && (
                     <div className="mb-2 rounded-xl overflow-hidden border border-black/10 bg-black/5">
-                      <a href={msg.media_url} target="_blank" rel="noopener noreferrer">
+                      <a href={getFullMediaUrl(msg.media_url)} target="_blank" rel="noopener noreferrer">
                         <img
-                          src={msg.media_url}
+                          src={getFullMediaUrl(msg.media_url)}
                           alt="รูปภาพแนบ"
                           className="max-h-72 max-w-full object-cover hover:opacity-95 transition-opacity"
                         />

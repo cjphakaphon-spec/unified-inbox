@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { MessageSquare, Lock, Mail, AlertCircle, ArrowRight } from 'lucide-react';
+import { API_BASE } from '../config';
 
 export const LoginPage: React.FC = () => {
   const { login } = useAuth();
@@ -15,7 +16,7 @@ export const LoginPage: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const res = await fetch('/api/auth/login', {
+      const res = await fetch(`${API_BASE}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),

@@ -1,4 +1,5 @@
 import type { Conversation, Message, MessageType } from '../types';
+import { API_BASE } from '../config';
 
 function getHeaders(token: string) {
   return {
@@ -15,7 +16,7 @@ export async function fetchConversations(
   if (filter?.status) params.append('status', filter.status);
   if (filter?.channel) params.append('channel', filter.channel);
 
-  const res = await fetch(`/api/conversations?${params.toString()}`, {
+  const res = await fetch(`${API_BASE}/api/conversations?${params.toString()}`, {
     headers: getHeaders(token),
   });
   if (!res.ok) throw new Error('Failed to fetch conversations');
@@ -28,8 +29,8 @@ export async function fetchMessages(
   before?: number
 ): Promise<Message[]> {
   const url = before
-    ? `/api/conversations/${conversationId}/messages?before=${before}`
-    : `/api/conversations/${conversationId}/messages`;
+    ? `${API_BASE}/api/conversations/${conversationId}/messages?before=${before}`
+    : `${API_BASE}/api/conversations/${conversationId}/messages`;
 
   const res = await fetch(url, { headers: getHeaders(token) });
   if (!res.ok) throw new Error('Failed to fetch messages');
@@ -49,7 +50,7 @@ export async function sendMessage(
 ): Promise<Message> {
   const body = typeof payload === 'string' ? { text: payload } : payload;
 
-  const res = await fetch(`/api/conversations/${conversationId}/messages`, {
+  const res = await fetch(`${API_BASE}/api/conversations/${conversationId}/messages`, {
     method: 'POST',
     headers: getHeaders(token),
     body: JSON.stringify(body),
@@ -71,7 +72,7 @@ export async function uploadMedia(
   const formData = new FormData();
   formData.append('file', file);
 
-  const res = await fetch('/api/upload', {
+  const res = await fetch(`${API_BASE}/api/upload`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -87,7 +88,7 @@ export async function uploadMedia(
 }
 
 export async function markAsRead(token: string, conversationId: number): Promise<void> {
-  await fetch(`/api/conversations/${conversationId}/read`, {
+  await fetch(`${API_BASE}/api/conversations/${conversationId}/read`, {
     method: 'POST',
     headers: getHeaders(token),
   });
@@ -98,7 +99,7 @@ export async function updateConversation(
   conversationId: number,
   updates: { status?: 'open' | 'closed'; assigned_to?: number | null }
 ): Promise<Conversation> {
-  const res = await fetch(`/api/conversations/${conversationId}`, {
+  const res = await fetch(`${API_BASE}/api/conversations/${conversationId}`, {
     method: 'PATCH',
     headers: getHeaders(token),
     body: JSON.stringify(updates),
